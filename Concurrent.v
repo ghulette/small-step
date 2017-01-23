@@ -14,17 +14,19 @@ Inductive com : Type :=
   | CPar : com -> com -> com.
 
 Notation "'SKIP'" :=
-  CSkip.
+  CSkip : cimp_scope.
 Notation "x '::=' a" :=
-  (CAss x a) (at level 60).
+  (CAss x a) (at level 60) : cimp_scope.
 Notation "c1 ;; c2" :=
-  (CSeq c1 c2) (at level 80, right associativity).
+  (CSeq c1 c2) (at level 80, right associativity) : cimp_scope.
 Notation "'WHILE' b 'DO' c 'END'" :=
-  (CWhile b c) (at level 80, right associativity).
+  (CWhile b c) (at level 80, right associativity) : cimp_scope.
 Notation "'IFB' b 'THEN' c1 'ELSE' c2 'FI'" :=
-  (CIf b c1 c2) (at level 80, right associativity).
+  (CIf b c1 c2) (at level 80, right associativity) : cimp_scope.
 Notation "'PAR' c1 'WITH' c2 'END'" :=
-  (CPar c1 c2) (at level 80, right associativity).
+  (CPar c1 c2) (at level 80, right associativity) : cimp_scope.
+
+Local Open Scope cimp_scope.
 
 Inductive cstep : (com * state)  -> (com * state) -> Prop :=
   | CS_AssStep : forall st i a a',
@@ -56,13 +58,13 @@ Inductive cstep : (com * state)  -> (com * state) -> Prop :=
       (PAR c1 WITH c2 END) / st ==> (PAR c1 WITH c2' END) / st'
   | CS_ParDone : forall st,
       (PAR SKIP WITH SKIP END) / st ==> SKIP / st
-  where " t '/' st '==>' t' '/' st' " := (cstep (t,st) (t',st')).
+  where " t '/' st '==>' t' '/' st' " := (cstep (t,st) (t',st')) : cimp_scope.
 
 Definition cmultistep := multi cstep.
 
 Notation " t '/' st '==>*' t' '/' st' " :=
    (multi cstep  (t,st) (t',st'))
-   (at level 40, st at level 39, t' at level 39).
+   (at level 40, st at level 39, t' at level 39) : cimp_scope.
 
 Definition par_loop : com :=
   PAR
